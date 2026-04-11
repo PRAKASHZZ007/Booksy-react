@@ -12,7 +12,7 @@ const PriceRange = (props) => {
     return (
       <Tooltip
         overlayInnerStyle={{ minHeight: "auto" }}
-        overlay={"$" + handleProps.value}
+        overlay={"₹" + handleProps.value}
         offsetX={-50}
         offsetY={-10}
         placement="top"

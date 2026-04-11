@@ -12,6 +12,7 @@
 
 .book-details-image{
     max-width: 500px;
+    margin: 20px;
 }
 
 @media screen and (min-width: 768px) {
@@ -37,6 +38,7 @@
 .book-details-image-container {
   text-align: center;
   max-width: 100%;
+  padding: 25px;
 }
 .book-details-subtitle {
   font-size: 16px;
@@ -93,4 +95,62 @@ table {
 
 th {
   text-align: left;
+}
+
+/* 🟡 Add to Cart */
+.primary-btn {
+  background-color: #facc15;
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.primary-btn:hover {
+  background-color: #eab308;
+  transform: scale(1.05);
+}
+
+/* 🔵 Back Button */
+.secondary-btn {
+  background-color: #0ea5e9;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.secondary-btn:hover {
+  background-color: #0284c7;
+  transform: scale(1.05);
+}
+
+/* 🚫 Disabled */
+.primary-btn:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.secondary-btn {
+  background-color: #facc15; /* same as primary */
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 600;
+}
+
+.secondary-btn:hover {
+  background-color: #eab308;
+  transform: scale(1.05);
 }

@@ -1,72 +1,59 @@
-.cart-item-container{
+.cart-item-container {
     display: flex;
-    flex-direction:row;
+    flex-direction: row;
     width: 100%;
     justify-content: stretch;
 }
 
-.cart-book-image{
+.cart-book-image {
     width: 40%;
     max-width: 200px;
 }
 
-.cart-book-subtitle{
-    display: none
+.cart-book-subtitle {
+    display: none;
 }
 
 @media screen and (min-width: 768px) {
     .cart-book-subtitle {
-      display: inline;
+        display: inline;
     }
 }
 
-.product-info-container{
+.product-info-container {
     width: 60%;
-    display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.product-actions-container{
-    display:flex;
+.product-actions-container {
+    display: flex;
     width: 20%;
     flex-direction: row;
     justify-content: end;
     align-items: center;
 }
 
-.delete-button{
-    background-color:#3e434b;;
-    height: 45px;
-    width: 45px;
-    border-radius: 10px;
-    border-width: 0px;
-    padding: 5px;
-}
-
-.delete-button{
-    background-color:#630202;;
-    height: 45px;
-    width: 45px;
-    border-radius: 10px;
-    border-width: 0px;
-    padding: 5px;
-    transition-duration: 500ms;
+/* DELETE BUTTON (clean version) */
+.delete-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
     margin: 5px;
+    border: 1px solid black;
 }
 
-.delete-button:hover{
-    background-color:#0f0f11;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+/* ICON */
+.delete-icon {
+    font-size: 30px;
+    color: #e63946;
 }
 
-.delete-icon{
-    font-size: 20px;
-    color: white;
-}
-
-.amount-container{
-    display:flex;
+/* AMOUNT SECTION */
+.amount-container {
+    display: flex;
     width: 15%;
     flex-direction: row;
     justify-content: end;
@@ -74,18 +61,21 @@
     padding: 20px;
 }
 
-
-.quantity-btn{
+.quantity-btn {
     font-size: 26px;
     margin: 15px;
     background-color: #630202;
     color: white;
 }
 
-.quantity-text{
+.quantity-text {
     font-size: 20px;
 }
 
-.book-price{
+.book-price {
     font-size: 20px;
+}
+
+.book-image{
+    margin: 20px
 }

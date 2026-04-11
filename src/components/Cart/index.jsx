@@ -13,8 +13,9 @@ const Cart = () => {
 
   const isCartEmpty = cartList.length === 0;
 
+  // ✅ FIXED TOTAL
   const total = cartList.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace("$", ""));
+    const price = item.price;
     const quantity = item.quantity || 1;
     return sum + price * quantity;
   }, 0);
@@ -31,7 +32,7 @@ const Cart = () => {
 
           <div className="cart-container">
             {cartList.map(item => (
-              <CartItem key={item.isbn13} cartItemDetails={item} />
+              <CartItem key={item.id} cartItemDetails={item} />
             ))}
 
             {isCartEmpty ? (
@@ -58,7 +59,7 @@ const Cart = () => {
             <div className="order-summary-container">
               <div className="order-amount-container">
                 <p className="order-amount">Amount Payable:</p>
-                <h1 className="cart-price">{`$${total.toFixed(2)}`}</h1>
+                <h1 className="cart-price">₹ {total.toFixed(2)}</h1>
               </div>
 
               <p className="order-text">(inclusive of all taxes)</p>

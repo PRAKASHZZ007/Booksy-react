@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import BookItem from "../BookItem";
 import PriceRange from "../PriceRange";
-import { TailSpin } from "react-loader-spinner";
 import Header from "../Header";
 import "./index.css";
+import Loader from "../Loader";
 
 const priceRangeExtreme = [0, 1000];
 
@@ -20,6 +20,10 @@ const BookList = () => {
   const [priceRangeValue, setPriceRangeValue] = useState(priceRangeExtreme);
   const [searchInput, setSearchInput] = useState("");
 
+  // ✅ ADDED: pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const booksPerPage = 6;
+
   useEffect(() => {
     getBooks();
   }, []);
@@ -27,12 +31,16 @@ const BookList = () => {
   const getBooks = async () => {
     setApiStatus(apiStatusConstants.inProgress);
     try {
-      const response = await fetch("https://api.itbook.store/1.0/new");
+      const response = await fetch("https://gutendex.com/books");
       const data = await response.json();
 
-      const books = data.books.map(book => ({
-        ...book,
-        price: Math.floor(Math.random() * 1000),
+      const books = data.results.map(book => ({
+        id: book.id,
+        title: book.title,
+        subtitle: book.subjects?.[0] || "No subtitle",
+        image: book.formats["image/jpeg"],
+        authors: book.authors.map(a => a.name).join(", "),
+        price: Math.floor(Math.random() * 500) + 100,
       }));
 
       setBooksData(books);
@@ -42,11 +50,6 @@ const BookList = () => {
     }
   };
 
-  const onChangeSliderPosition = (newRange) => {
-    setPriceRangeValue(newRange);
-  };
-
-  // 🔍 Price + Search logic
   const getFilteredBooks = () => {
     return booksData.filter(book => {
       const priceMatch =
@@ -61,10 +64,39 @@ const BookList = () => {
     });
   };
 
+  // ✅ ADDED: pagination logic
+  const filteredBooks = getFilteredBooks();
+
+  const indexOfLastBook = currentPage * booksPerPage;
+  const indexOfFirstBook = indexOfLastBook - booksPerPage;
+  const currentBooks = filteredBooks.slice(
+    indexOfFirstBook,
+    indexOfLastBook
+  );
+
+  const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+
+  const changePage = (page) => {
+    setCurrentPage(page);
+  };
+
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
+
   const renderLoadingView = () => (
-    <div className="loader-container">
-      <TailSpin color="#0284c7" height={50} width={50} />
-    </div>
+    <>
+      <Header/>
+      <Loader/>
+    </>
   );
 
   const renderFailureView = () => (
@@ -81,28 +113,66 @@ const BookList = () => {
         <Header />
         <h1 className="book-items-heading">Books</h1>
 
-        {/* 🔍 Center Search Box */}
         <div className="search-box-container">
           <input
             type="search"
             placeholder="Search books..."
             className="search-input"
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={(e) => {
+              setSearchInput(e.target.value);
+              setCurrentPage(1); // reset page on search
+            }}
           />
         </div>
 
         <PriceRange
           sliderExtremes={priceRangeExtreme}
           sliderPositions={priceRangeValue}
-          onChangeSliderPosition={onChangeSliderPosition}
+          onChangeSliderPosition={(value) => {
+            setPriceRangeValue(value);
+            setCurrentPage(1); // reset page on filter
+          }}
         />
 
-        <ul className="book-list-container">
-          {filteredBooks.map(book => (
-            <BookItem key={book.isbn13} bookItemDetails={book} />
-          ))}
-        </ul>
+        {/* ✅ ADDED: empty state */}
+        {filteredBooks.length === 0 ? (
+          <h2 style={{ textAlign: "center" }}>
+            No books available in this range
+          </h2>
+        ) : (
+          <>
+            <ul className="book-list-container">
+              {currentBooks.map(book => (
+                <BookItem key={book.id} bookItemDetails={book} />
+              ))}
+            </ul>
+
+            {/* ✅ ADDED: pagination UI */}
+            <div className="pagination-container">
+              <button onClick={prevPage} disabled={currentPage === 1}>
+                Prev
+              </button>
+
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => changePage(index + 1)}
+                  className={currentPage === index + 1 ? "active" : ""}
+                >
+                  {index + 1}
+                </button>
+              ))}
+
+              <button
+                onClick={nextPage}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
       </>
     );
   };
@@ -120,4 +190,3 @@ const BookList = () => {
 };
 
 export default BookList;
-

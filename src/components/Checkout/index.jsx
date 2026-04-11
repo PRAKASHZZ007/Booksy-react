@@ -17,12 +17,10 @@ const Checkout = () => {
   const [orderItems, setOrderItems] = useState([]);
   const [orderTotal, setOrderTotal] = useState(0);
 
-  const getItemPrice = price =>
-    Number(price.replace("$", "")) || 0;
-
+  // ✅ FIXED: price is already number
   const getTotal = list =>
     list.reduce((sum, item) => {
-      const price = getItemPrice(item.price);
+      const price = item.price;
       const quantity = item.quantity || 1;
       return sum + price * quantity;
     }, 0);
@@ -30,31 +28,31 @@ const Checkout = () => {
   const total = getTotal(cartList);
 
   const handleOrderSubmit = details => {
-    setOrderItems(cartList);   // snapshot items
-    setOrderTotal(total);      // snapshot total
+    setOrderItems(cartList);   // snapshot
+    setOrderTotal(total);
     setUserDetails(details);
     setOrderPlaced(true);
-    dispatch(resetCart());     // clear cart after snapshot
+    dispatch(resetCart());
   };
 
+  // ✅ ORDER SUMMARY (before checkout)
   const renderOrderSummary = () => (
     <div className="summary-container">
       {cartList.map(item => {
-        const price = getItemPrice(item.price);
         const quantity = item.quantity || 1;
-        const itemTotal = price * quantity;
+        const itemTotal = item.price * quantity;
 
         return (
-          <div key={item.isbn13} className="summary-item-container">
+          <div key={item.id} className="summary-item-container">
             <img
-              src={item.image}
+              src={item.image || "https://via.placeholder.com/100"}
               alt={item.title}
               className="summary-item-image"
             />
             <p className="summary-item-title">{item.title}</p>
             <p className="summary-item-qty">Qty: {quantity}</p>
             <p className="summary-item-price">
-              ${itemTotal.toFixed(2)}
+              ₹ {itemTotal.toFixed(2)}
             </p>
           </div>
         );
@@ -62,11 +60,12 @@ const Checkout = () => {
 
       <div className="summary-item-container total-row">
         <p className="summary-total-title">Total</p>
-        <p className="summary-total-price">${total.toFixed(2)}</p>
+        <p className="summary-total-price">₹ {total.toFixed(2)}</p>
       </div>
     </div>
   );
 
+  // ✅ AFTER ORDER PLACED
   const renderOrderConfirmation = () => (
     <div className="order-confirmation">
       <h1>Thank you for your order!</h1>
@@ -85,14 +84,13 @@ const Checkout = () => {
           <h2>Order Summary</h2>
 
           {orderItems.map(item => {
-            const price = getItemPrice(item.price);
             const quantity = item.quantity || 1;
-            const itemTotal = price * quantity;
+            const itemTotal = item.price * quantity;
 
             return (
-              <div key={item.isbn13} className="order-item">
+              <div key={item.id} className="order-item">
                 <img
-                  src={item.image}
+                  src={item.image || "https://via.placeholder.com/100"}
                   alt={item.title}
                   className="order-item-image"
                 />
@@ -100,7 +98,7 @@ const Checkout = () => {
                   <p className="order-item-title">{item.title}</p>
                   <p>Qty: {quantity}</p>
                   <p className="order-item-price">
-                    ${itemTotal.toFixed(2)}
+                    ₹ {itemTotal.toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -108,7 +106,7 @@ const Checkout = () => {
           })}
 
           <div className="order-total">
-            <p><strong>Total:</strong> ${orderTotal.toFixed(2)}</p>
+            <p><strong>Total:</strong> ₹ {orderTotal.toFixed(2)}</p>
           </div>
         </div>
       </div>
@@ -141,7 +139,7 @@ const Checkout = () => {
           <h1 className="checkout-heading">Checkout</h1>
 
           <Link to="/cart" className="back-button">
-            <FaArrowLeft className="back-icon" />
+            <FaArrowLeft />
           </Link>
 
           <div className="form-and-summary">
